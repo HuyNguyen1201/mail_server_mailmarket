@@ -121,7 +121,7 @@ def get_task():
                 if detail['ready_get_code']:
                     mail_dict[id]['ready_get_code'] = False
                     mail_dict[id]['is_getting_code'] = True
-                    return 200, str(id) + '|' + detail['mail'] +'|' +  detail['password']
+                    return 200, str(id) + '|' + detail['mail'] +'|' +  detail['password'] + '|' + str(detail['code'])
     return 100, 'there is not any new task'
 
 
