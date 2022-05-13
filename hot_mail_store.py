@@ -16,7 +16,7 @@ def get_mail():
         if len(mail_list)<=0:
             return 300,'mail is out of stock'
         mail,password, start_time,n_time,use_time = mail_list.pop(0)
-        if time.time()-use_time>0:#6*63:
+        if time.time()-use_time>6*63:
             break
         continue
     if n_time <1:
@@ -31,7 +31,7 @@ def get_mail():
                         'password': password,
                         'n_get_code': 5}
     print(mail_list)
-    return 200,id
+    return 200,str(id) + '|' + mail
 
 def get_request_code(orderid):
     global mail_dict

@@ -5,6 +5,7 @@ import temp_mail_store
 import hot_mail_store
 import mail_thread
 import threading
+import log
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
@@ -100,8 +101,31 @@ def post_code():
     except:
         return jsonify({'status':100,'message': 'unknown error'})
 
+
+@app.route('/api/get-log',methods=['GET'])
+def get_log():
+    log_arr = log.get_log()
+    res = {
+        'status': 200,
+        'message':{
+            'mailmarket':
+                {
+                'totalGet': log_arr[0],
+                'totalSuccess': log_arr[1],
+                'totalFail': log_arr[2],
+                'totalDie': log_arr[3]
+                },
+            'hotmailstore':{
+                hot_mail_store.get_log()
+            }
+        }
+    }
+    return jsonify(res)
+
+
+
 if __name__ == "__main__":
     # threading.Thread(target=mail_thread.run_gen).start()
     # threading.Thread(target=mail_thread.run_clear).start()
     #threading.Thread(target=customer_thread.run_gen).start()
-    app.run(host='0.0.0.0', port=105)
+    app.run(host='0.0.0.0', port=55)
