@@ -38,6 +38,8 @@ def get_request_code(orderid):
     orderid = int(orderid)
     if orderid not in mail_dict.keys():
         return 401, 'orderid is not exist'
+    if mail_dict[orderid]['code'] != 0:
+        return 405, 'mail is got an otp'
     mail_elm = mail_dict[orderid]
     if mail_elm['n_get_code'] <=0:
         return 402, 'get code many times'
