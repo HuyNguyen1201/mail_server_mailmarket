@@ -8,13 +8,6 @@ from bs4 import BeautifulSoup
 
 # init scraper list
 scraper_list = []
-for _, _, filenames in os.walk('./scrappers'):
-    break
-for name in filenames:
-    with open('./scrappers/' + name, 'rb') as f:
-        scraper = pickle.load(f)
-        scraper_list.append(scraper)
-
 index_scraper = 0
 
 

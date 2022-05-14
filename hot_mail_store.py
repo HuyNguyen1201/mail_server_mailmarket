@@ -1,6 +1,8 @@
 import threading
 import time
 import os
+
+from regex import P
 import id_order
 import log
 mail_list = []
@@ -8,7 +10,7 @@ mail_dict = dict()
 time_life = 12*60*60
 
 def add_mail(mail,password,n_time=0):
-    mail_list.append([mail,password,int(time.time()),n_time,-600])
+    mail_list.append([mail,password,int(time.time()),n_time,-600,'0'])
 
 def get_mail():
     global mail_list,mail_dict
@@ -69,7 +71,7 @@ def get_log():
             zero += 1
         elif m[3] == 1:
             one +=1
-    return {'zero':zero,'one':one,'sum':zero + one}
+    return {'zero':zero,'one':one,'sum':2*zero + one}
 
 def get_code(id):
     global mail_dict
@@ -90,7 +92,7 @@ def get_code(id):
 
 def post_code(id, code):  # local
     id = int(id)
-    global mail_dict
+    global mail_dict,mail_list
     try:
         if id in mail_dict.keys():
             mail_dict[id]['is_getting_code'] = False
@@ -105,6 +107,13 @@ def post_code(id, code):  # local
                     log.add_log(3)
                 else:
                     log.add_log(2)
+                # save code in mail
+                mail = mail_dict[id]['mail']
+                for i in range(len(mail_list)):
+                    if mail_list[i][0] == mail:
+                        mail_elm = mail_list[i]
+                        mail_elm[-1] = str(code)
+                        mail_list[i] = mail_elm
                 mail_dict[id]['code'] = code
         return 200, 'post code successfully'
     except:
@@ -151,7 +160,7 @@ if os.path.exists('mail_list.txt'):
         if data[0] != '':
             for d in data:
                 d = d.split('|')
-                mail_list.append([d[0],d[1],int(d[2]),int(d[3]),int(d[4])])
+                mail_list.append([d[0],d[1],int(d[2]),int(d[3]),int(d[4]),d[5]])
 
 threading.Thread(target=run_clear_mail).start()
 threading.Thread(target=run_save_mail).start()

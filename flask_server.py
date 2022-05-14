@@ -115,9 +115,7 @@ def get_log():
                 'totalFail': log_arr[2],
                 'totalDie': log_arr[3]
                 },
-            'hotmailstore':{
-                hot_mail_store.get_log()
-            }
+            'hotmailstore':hot_mail_store.get_log()
         }
     }
     return jsonify(res)
