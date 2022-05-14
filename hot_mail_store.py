@@ -1,8 +1,6 @@
 import threading
 import time
 import os
-
-from regex import P
 import id_order
 import log
 mail_list = []
@@ -17,12 +15,12 @@ def get_mail():
     while True:
         if len(mail_list)<=0:
             return 300,'mail is out of stock'
-        mail,password, start_time,n_time,use_time = mail_list.pop(0)
+        mail,password, start_time,n_time,use_time,pre_code = mail_list.pop(0)
         if time.time()-use_time>6*63:
             break
         continue
     if n_time <1:
-        mail_list.append([mail,password,start_time,n_time + 1,int(time.time())])
+        mail_list.append([mail,password,start_time,n_time + 1,int(time.time()),str(pre_code)])
     # save idorder
     id = id_order.get_id()
     mail_dict[id] = {'time': time.time(),
@@ -101,12 +99,6 @@ def post_code(id, code):  # local
                 return 300, 'added code before'
             if code != -1 and code != 1:
                 log.add_log(1)
-                mail_dict[id]['code'] = code
-            else:
-                if code == -1:
-                    log.add_log(3)
-                else:
-                    log.add_log(2)
                 # save code in mail
                 mail = mail_dict[id]['mail']
                 for i in range(len(mail_list)):
@@ -114,6 +106,14 @@ def post_code(id, code):  # local
                         mail_elm = mail_list[i]
                         mail_elm[-1] = str(code)
                         mail_list[i] = mail_elm
+                        print(f'set {mail} with code {code}')
+                        break
+                mail_dict[id]['code'] = code
+            else:
+                if code == -1:
+                    log.add_log(3)
+                else:
+                    log.add_log(2)
                 mail_dict[id]['code'] = code
         return 200, 'post code successfully'
     except:
